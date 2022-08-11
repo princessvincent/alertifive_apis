@@ -186,4 +186,12 @@ $user->update([
     }
 
         }
+
+        public function allusers(){
+            $user = User::all();
+            return response()->json([
+                'status' => true,
+                'user' => $user,
+            ]);
+        }
 }

@@ -29,6 +29,7 @@ Route::get('/', function() {
 Route::post('forgetpas', [UserController::class, 'forgetpassword']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
+Route::get('allusers', [UserController::class, 'allusers']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::post('create_group', [GroupController::class, "index"]);
@@ -44,5 +45,6 @@ Route::post('inviteuser', [GroupController::class, 'inviteuser']);
 Route::post('groupmembers/{id}', [GroupController::class, 'groupuser']);
 Route::post('message', [GroupController::class, 'message']);
 Route::post('viewmessage', [GroupController::class, 'viewmessage']);
+
 
 });
