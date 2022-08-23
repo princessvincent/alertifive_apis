@@ -70,16 +70,13 @@ return view('myviews.viewgro', compact('group'));
     //for api
 
     public function listgroup(){
-        $group = Group::where('user_id', auth::user()->id)->get();
+        $groups = Group::where('user_id', auth::user()->id)->get();
 
-        foreach ($group as $groups) {
-            return response()->json([
-                'status' => true,
-                'Group name' => $groups->name,
-                'description' => $groups->description,
-                
-            ]);
-        }
+              return response()->json([
+            'status' => true,
+            'message' => "Groups fetched successfully",
+            'data' => $groups,
+        ]);
 
       
             }
