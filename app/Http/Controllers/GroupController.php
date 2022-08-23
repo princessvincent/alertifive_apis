@@ -70,14 +70,18 @@ return view('myviews.viewgro', compact('group'));
     //for api
 
     public function listgroup(){
-        $group = Group::where('user_id', auth::user()->id)->first();
-        
-        return response()->json([
-            'status' => true,
-            'Group name' => $group->name,
-            'description' => $group->description,
-            
-        ]);
+        $group = Group::where('user_id', auth::user()->id)->get();
+
+        foreach ($group as $groups) {
+            return response()->json([
+                'status' => true,
+                'Group name' => $groups->name,
+                'description' => $groups->description,
+                
+            ]);
+        }
+
+      
             }
     public function inviteuser(Request $request){
 $group = new Group();
