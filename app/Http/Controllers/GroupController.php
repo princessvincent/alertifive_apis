@@ -23,7 +23,7 @@ $group->save();
 
 return response()->json([
     'status' => true,
-    "msg" => "Group created Successfully!"
+    "message" => "Group created Successfully!"
 ]);
     }
 //this one is for postman/api
@@ -58,7 +58,7 @@ Keyword::create([
 
 return response()->json([
     'status' => true,
-    "msg" => "Keywords created Successfully!"
+    "message" => "Keywords created Successfully!"
 ]);
 
     }
@@ -78,7 +78,7 @@ return view('myviews.viewgro', compact('group'));
             'data' => $groups,
         ]);
 
-      
+
             }
     public function inviteuser(Request $request){
 $group = new Group();
@@ -97,32 +97,39 @@ Groupmember::create([
 ]);
 return response()->json([
     "status" => true,
-    "msg" => "User Invited!"
-]);  
+    "message" => "User Invited!"
+]);
 
 }else{
     return response()->json([
         "status" => false,
-        "msg" => "You are not the Group Owner"
+        "message" => "You are not the Group Owner"
     ]);
 }
 }else{
     return response()->json([
         "status" => false,
-        "msg" => "This User does not Exist!"
+        "message" => "This User does not Exist!"
     ]);
 }
     }
 
     public function groupuser($id){
-         $group =  Group::find($id);
+         $group =  Group::where([['id',$id], ['user_id', Auth::id()]])->first();
         //  dd($group->id);
+
+        if(!$group){
+            return response()->json([
+                'status' => false,
+                'message' =>  "Group does not exist"
+            ]);
+        }
+
         $member = Groupmember::where('group_id', $group->id)->get();
 
         return response()->json([
             'status' => true,
-            'Members' =>  $member
-            
+            'data' =>  $member
         ]);
 
     }
@@ -131,12 +138,19 @@ return response()->json([
 
 public function listkey(){
     // $group = new Group();
-    $keyword = Keyword::where('user_id', Auth::user()->id)->first(); 
+    $keyword = Keyword::where('user_id', Auth::user()->id)->get();
 return response()->json([
     'status' => true,
-    'Group Id' => $keyword->group_id,
-    'Sender Name' => $keyword->sender_name,
-    
+    'data' => $keyword
+]);
+}
+
+public function listkey_group($id){
+    // $group = new Group();
+    $keyword = Keyword::where([['user_id', Auth::user()->id], ['group_id', $id]])->get();
+return response()->json([
+    'status' => true,
+    'data' => $keyword
 ]);
 }
 
@@ -147,9 +161,9 @@ $group->delete();
 
 return response()->json([
     'status' => true,
-    'msg' => 'Group Deleted',
+    'message' => 'Group Deleted',
     ]);
-        
+
 }
 
 public function deletekeyword( $id){
@@ -160,9 +174,9 @@ $key->delete();
 
 return response()->json([
     'status' => true,
-    'msg' => 'Keyword Deleted',
+    'message' => 'Keyword Deleted',
     ]);
-        
+
     }
 
     public function groupsetting(Request $request, $id){
@@ -198,7 +212,7 @@ return response()->json([
         $viewmsg = Message::where('user_id', Auth::user()->id)->get();
         return response()->json([
             'status' => true,
-            'messages' => $viewmsg
+            'data' => $viewmsg
         ]);
 
     }
