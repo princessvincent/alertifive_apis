@@ -135,7 +135,7 @@ public function listkey(){
 return response()->json([
     'status' => true,
     'Group Id' => $keyword->group_id,
-    'Sender Name' => $keyword->sender_name,
+    'Sender Name' => $keyword,
     
 ]);
 }

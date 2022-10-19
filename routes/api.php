@@ -36,15 +36,16 @@ Route::post('create_group', [GroupController::class, "index"]);
 Route::get('view_profile', [GroupController::class, "profile"]);
 Route::post('create_keywords', [GroupController::class, "keywords"]);
 Route::get('listgro', [GroupController::class, "listgroup"]);
-Route::post('list_keywords', [GroupController::class, "listkey"]);
+Route::get('list_keywords', [GroupController::class, "listkey"]);
 Route::post('changepassword', [UserController::class, 'changepass']);
 Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
 Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
 Route::post('groupsetting/{id}', [GroupController::class, 'groupsetting']);
 Route::post('inviteuser', [GroupController::class, 'inviteuser']);
-Route::post('groupmembers/{id}', [GroupController::class, 'groupuser']);
+Route::get('groupmembers/{id}', [GroupController::class, 'groupuser']);
 Route::post('message', [GroupController::class, 'message']);
 Route::post('viewmessage', [GroupController::class, 'viewmessage']);
+
 
 
 });
