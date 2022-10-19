@@ -65,7 +65,7 @@ return response()->json(["status" => true, 'data' => [
     }
 
     public function forgetpassword(Request $request){
-       
+
     try{
     $user = User::where('email', $request->email)->get();
 
@@ -94,27 +94,27 @@ passwordReset::updateOrCreate(
     'email' => $request->email,
     'token' => $token,
     'created_at' => $datetime,
-    
+
     ]
 );
 
 return response()->json([
     'status' =>true,
-    'msg' => 'Please check your mail to Resent your Password!'
+    'message' => 'Please check your mail to Resent your Password!'
 ]);
     }
     else{
 
     return response()->json([
         'status' =>False,
-        'msg' => 'User not Found!'
+        'message' => 'User not Found!'
     ]);
     }
 
     }catch (\Exception $e){
     return response()->json([
         'status' =>False,
-        'msg' => $e->getMessage()
+        'message' => $e->getMessage()
     ]);
     }
 

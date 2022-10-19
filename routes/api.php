@@ -37,6 +37,7 @@ Route::get('view_profile', [GroupController::class, "profile"]);
 Route::post('create_keywords', [GroupController::class, "keywords"]);
 Route::get('listgro', [GroupController::class, "listgroup"]);
 Route::get('list_keywords', [GroupController::class, "listkey"]);
+Route::get('list_group_keywords/{id}', [GroupController::class, "listkey_group"]);
 Route::post('changepassword', [UserController::class, 'changepass']);
 Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
 Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
@@ -44,7 +45,7 @@ Route::post('groupsetting/{id}', [GroupController::class, 'groupsetting']);
 Route::post('inviteuser', [GroupController::class, 'inviteuser']);
 Route::get('groupmembers/{id}', [GroupController::class, 'groupuser']);
 Route::post('message', [GroupController::class, 'message']);
-Route::post('viewmessage', [GroupController::class, 'viewmessage']);
+Route::get('viewmessage', [GroupController::class, 'viewmessage']);
 
 
 
