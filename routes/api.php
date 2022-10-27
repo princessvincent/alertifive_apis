@@ -43,6 +43,7 @@ Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
 Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
 Route::post('groupsetting/{id}', [GroupController::class, 'groupsetting']);
 Route::post('inviteuser', [GroupController::class, 'inviteuser']);
+Route::post('removeuser', [GroupController::class, 'removeuser']);
 Route::get('groupmembers/{id}', [GroupController::class, 'groupuser']);
 Route::post('message', [GroupController::class, 'message']);
 Route::get('viewmessage', [GroupController::class, 'viewmessage']);
