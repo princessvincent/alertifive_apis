@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', function() {
+Route::get('/', function () {
     return response()->json(['status' => 'Welcome to Laravel']);
 });
 
@@ -32,22 +32,20 @@ Route::post('login', [UserController::class, 'login']);
 Route::get('allusers', [UserController::class, 'allusers']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-Route::post('create_group', [GroupController::class, "index"]);
-Route::get('view_profile', [GroupController::class, "profile"]);
-Route::post('create_keywords', [GroupController::class, "keywords"]);
-Route::get('listgro', [GroupController::class, "listgroup"]);
-Route::get('list_keywords', [GroupController::class, "listkey"]);
-Route::get('list_group_keywords/{id}', [GroupController::class, "listkey_group"]);
-Route::post('changepassword', [UserController::class, 'changepass']);
-Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
-Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
-Route::post('groupsetting/{id}', [GroupController::class, 'groupsetting']);
-Route::post('inviteuser', [GroupController::class, 'inviteuser']);
-Route::post('removeuser', [GroupController::class, 'removeuser']);
-Route::get('groupmembers/{id}', [GroupController::class, 'groupuser']);
-Route::post('message', [GroupController::class, 'message']);
-Route::get('viewmessage', [GroupController::class, 'viewmessage']);
-
-
-
+    Route::post('create_group', [GroupController::class, "index"]);
+    Route::get('view_profile', [GroupController::class, "profile"]);
+    Route::post('create_keywords', [GroupController::class, "keywords"]);
+    Route::get('listgro', [GroupController::class, "listgroup"]);
+    Route::get('list_keywords', [GroupController::class, "listkey"]);
+    Route::get('list_group_keywords/{id}', [GroupController::class, "listkey_group"]);
+    Route::post('changepassword', [UserController::class, 'changepass']);
+    Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
+    Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
+    Route::post('groupsetting/{id}', [GroupController::class, 'groupsetting']);
+    Route::post('inviteuser', [GroupController::class, 'inviteuser']);
+    Route::post('removeuser', [GroupController::class, 'removeuser']);
+    Route::get('groupmembers/{id}', [GroupController::class, 'groupuser']);
+    Route::post('message', [GroupController::class, 'message']);
+    Route::get('viewmessage', [GroupController::class, 'viewmessage']);
+    Route::get('view-group-messages/{id}', [GroupController::class, 'viewGroupMessage']);
 });

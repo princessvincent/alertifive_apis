@@ -177,8 +177,7 @@ class GroupController extends Controller
 
     public function groupuser($id)
     {
-        $group = Group::where([['id', $id], ['user_id', Auth::id()]])->first();
-        //  dd($group->id);
+        $group = Groupmember::where([['group_id', $id], ['invite_username', Auth::user()->username]])->first();
 
         if (!$group) {
             return response()->json([
@@ -187,7 +186,7 @@ class GroupController extends Controller
             ]);
         }
 
-        $member = Groupmember::where('group_id', $group->id)->get();
+        $member = Groupmember::where('group_id', $id)->get();
 
         return response()->json([
             'status' => true,
@@ -262,7 +261,7 @@ class GroupController extends Controller
 
         $msg->user_id = Auth::user()->id;
         $msg->message = $request->message;
-        $msg->sender = $request->username;
+        $msg->sender = $request->sender;
         $msg->date = $request->date;
         $msg->metadata = $request->metadata;
 
@@ -281,6 +280,31 @@ class GroupController extends Controller
         return response()->json([
             'status' => true,
             'data' => $viewmsg
+        ]);
+
+    }
+
+    public function viewGroupMessage($id)
+    {
+        $groupM = Groupmember::where([['group_id', $id], ['invite_username', Auth::user()->username]])->first();
+
+        if (!$groupM) {
+            return response()->json([
+                'status' => false,
+                'message' => "You are not a member of this group"
+            ]);
+        }
+
+        $allMsg=[];
+        foreach ($groupM->keywords as $keywords){
+            $viewmsg = Message::where([['user_id', $groupM->Group->user_id], ['sender', 'LIKE', '%'.$keywords->sender_name.'%']])->get()->toArray();
+//            dd($viewmsg);
+            $allMsg=array_merge($allMsg, $viewmsg);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $allMsg
         ]);
 
     }

@@ -22,8 +22,13 @@ class Groupmember extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Group(): BelongsTo
+    public function Group()
     {
         return $this->belongsTo(Group::class, 'group_id', 'id');
     }
+
+    public function keywords(){
+        return $this->hasMany(Keyword::class, 'group_id', 'group_id');
+    }
+
 }
