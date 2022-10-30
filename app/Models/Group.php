@@ -27,5 +27,10 @@ class Group extends Model
     {
         return $this->hasMany(Groupmember::class, 'group_id', 'id');
     }
-    
+
+    public function keywords(){
+        return $this->hasMany(Keyword::class, 'group_id', 'id');
+    }
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\NewMessageJob;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Keyword;
@@ -9,6 +10,7 @@ use App\Models\Message;
 use App\Models\Groupmember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
@@ -243,10 +245,32 @@ class GroupController extends Controller
 
     }
 
-    public function groupsetting(Request $request, $id)
+    public function groupsetting(Request $request)
     {
-        $group = Group::find($id);
-        $group->status = $request->status;
+        $input = $request->all();
+        $rules = array(
+            'id' => 'required',
+            'auto_notify' => 'required'
+        );
+
+        $validator = Validator::make($input, $rules);
+
+        $input = $request->all();
+
+        if (!$validator->passes()) {
+            return response()->json(['success' => 0, 'message' => implode(",", $validator->errors()->all())]);
+        }
+
+        $group=Group::where(['user_id' => Auth::user()->id, 'id' =>$input['id']])->first();
+
+        if(!$group){
+            return response()->json([
+                "status" => false,
+                "message" => "Group does not exist or you are not the owner"
+            ]);
+        }
+
+        $group->auto_notify = $input['auto_notify'];
         $group->save();
 
         return response()->json([
@@ -266,6 +290,8 @@ class GroupController extends Controller
         $msg->metadata = $request->metadata;
 
         $msg->save();
+
+        NewMessageJob::dispatch($msg);
 
         return response()->json([
             'status' => true,
