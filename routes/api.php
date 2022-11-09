@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/', function () {
-    return response()->json(['status' => 'Welcome to Laravel']);
+    return response()->json(['status' => 'Welcome to Alertifive']);
 });
 
 

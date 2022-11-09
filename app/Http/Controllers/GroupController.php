@@ -85,7 +85,8 @@ class GroupController extends Controller
 
     public function listgroup()
     {
-        $groups = Group::where('user_id', auth::user()->id)->get();
+        $groups = Groupmember::where('invite_username', auth::user()->username)->with('Group')->get();
+//        $groups = Group::where('user_id', auth::user()->id)->get();
 
         return response()->json([
             'status' => true,
