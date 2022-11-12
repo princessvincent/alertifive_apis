@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\NewMessageJob;
+use App\Models\GroupApi;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Keyword;
@@ -85,8 +86,7 @@ class GroupController extends Controller
 
     public function listgroup()
     {
-        $groups = Groupmember::where('invite_username', auth::user()->username)->with('Group')->get();
-//        $groups = Group::where('user_id', auth::user()->id)->get();
+        $groups = Groupmember::where('invite_username', auth::user()->username)->with('Group','api')->get();
 
         return response()->json([
             'status' => true,
@@ -140,6 +140,43 @@ class GroupController extends Controller
         }
     }
 
+    public function addGroupAPI(Request $request)
+    {
+        $group = new Group();
+
+        $group->id = $request->group_id;
+
+        if (Group::where('user_id', Auth::user()->id)) {
+
+            $gm=GroupApi::where(['group_id' => $request->group_id])->first();
+
+            if($gm){
+                $gm->url=$request->url;
+                $gm->save();
+                return response()->json([
+                    "status" => true,
+                    "message" => "Group Api updated successfully"
+                ]);
+            }
+
+            GroupApi::create([
+                'group_id' => $request->group_id,
+                'url' => $request->url,
+            ]);
+
+            return response()->json([
+                "status" => true,
+                "message" => "Group API created successfully"
+            ]);
+
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "You are not the Group Owner"
+            ]);
+        }
+    }
+
     public function removeuser(Request $request)
     {
 
@@ -162,6 +199,26 @@ class GroupController extends Controller
             }
 
             $gm=Groupmember::where(['invite_username' => $request->invite_username, 'group_id' =>$request->group_id])->first();
+
+            if(!$gm){
+                return response()->json([
+                    "status" => false,
+                    "message" => "User not in this group"
+                ]);
+            }
+
+            $gm->delete();
+
+        return response()->json([
+            "status" => true,
+            "message" => "User removed successfully"
+        ]);
+    }
+
+    public function leaveGroup($group_id)
+    {
+
+            $gm=Groupmember::where(['invite_username' => Auth::user()->username, 'group_id' =>$group_id])->first();
 
             if(!$gm){
                 return response()->json([

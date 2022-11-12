@@ -31,4 +31,10 @@ class Groupmember extends Model
         return $this->hasMany(Keyword::class, 'group_id', 'group_id');
     }
 
+
+    public function api(){
+        return $this->hasOne(GroupApi::class, 'group_id', 'group_id');
+    }
+
+
 }

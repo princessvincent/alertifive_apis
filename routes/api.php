@@ -39,8 +39,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('list_keywords', [GroupController::class, "listkey"]);
     Route::get('list_group_keywords/{id}', [GroupController::class, "listkey_group"]);
     Route::post('changepassword', [UserController::class, 'changepass']);
+    Route::delete('leavegroup/{id}', [GroupController::class, 'leaveGroup']);
     Route::delete('deletegroup/{id}', [GroupController::class, 'deletegroup']);
     Route::delete('deletekeyword/{id}', [GroupController::class, 'deletekeyword']);
+    Route::post('addgroupapi', [GroupController::class, 'addGroupAPI']);
     Route::post('groupsetting', [GroupController::class, 'groupsetting']);
     Route::post('inviteuser', [GroupController::class, 'inviteuser']);
     Route::post('removeuser', [GroupController::class, 'removeuser']);
