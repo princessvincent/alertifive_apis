@@ -9,6 +9,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class PushNotificationJob implements ShouldQueue
 {
@@ -41,44 +43,55 @@ class PushNotificationJob implements ShouldQueue
 
         echo "sending call push notification to $this->stopic";
 
-        $payload = '{
-    "to": "/topics/' . $this->stopic . '",
-    "data": {
-        "priority":"high"
-        "extra_information": "group",
-        "id":"' . $this->group_id . '"
-    },
-    "notification": {
-        "title": "' . $this->title . '",
-        "body": "' . $this->message . '"
-    },
-    "priority":"high"
-}';
+        $topic='11';
 
-        Log::info("Push notification for Group");
-        Log::info($payload);
+        $messaging = app('firebase.messaging');
+        $message = CloudMessage::withTarget('topic', "11")
+            ->withNotification(Notification::create($this->title, $this->message))
+            ->withData(['group_id' => $this->group_id]);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://fcm.googleapis.com/fcm/send",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: key=" . env('PUSH_NOTIFICATION_KEY'),
-                "Content-Type: application/json",
-                "Content-Type: text/plain"
-            ),
-        ));
-        $uresponse = curl_exec($curl);
+        $messaging->send($message);
 
-        echo $uresponse;
+        echo $messaging;
+
+//        $payload = '{
+//    "to": "/topics/' . $this->stopic . '",
+//    "data": {
+//        "priority":"high"
+//        "extra_information": "group",
+//        "id":"' . $this->group_id . '"
+//    },
+//    "notification": {
+//        "title": "' . $this->title . '",
+//        "body": "' . $this->message . '"
+//    },
+//    "priority":"high"
+//}';
+//
+//        Log::info("Push notification for Group");
+//        Log::info($payload);
+//
+//        $curl = curl_init();
+//        curl_setopt_array($curl, array(
+//            CURLOPT_URL => "https://fcm.googleapis.com/fcm/send",
+//            CURLOPT_RETURNTRANSFER => true,
+//            CURLOPT_ENCODING => "",
+//            CURLOPT_MAXREDIRS => 10,
+//            CURLOPT_TIMEOUT => 0,
+//            CURLOPT_FOLLOWLOCATION => true,
+//            CURLOPT_SSL_VERIFYPEER => false,
+//            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//            CURLOPT_CUSTOMREQUEST => "POST",
+//            CURLOPT_POSTFIELDS => $payload,
+//            CURLOPT_HTTPHEADER => array(
+//                "Authorization: key=" . env('PUSH_NOTIFICATION_KEY'),
+//                "Content-Type: application/json",
+//                "Content-Type: text/plain"
+//            ),
+//        ));
+//        $uresponse = curl_exec($curl);
+//
+//        echo $uresponse;
 
     }
 }

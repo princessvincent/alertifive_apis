@@ -34,17 +34,27 @@ class NewMessageJob implements ShouldQueue
      */
     public function handle()
     {
-        $groups=Group::where("user_id", $this->message->user_id)->get();
+        $groups=Group::where("user_id", $this->message->user_id)->with("keywords","api")->get();
 
         foreach ($groups as $group){
+            echo $group;
             if($group->auto_notify == 1) {
-                $keywords = $groups->keywords;
+                $keywords = $group->keywords;
 
                 foreach ($keywords as $keyword) {
                     if ($keyword->sender_name == $this->message->sender){
+                        echo "sender is equal";
                         PushNotificationJob::dispatch($this->message->message, "New Message from $group->name", $group->id, $group->id);
+
+                        if($group->api != null){
+                            PushWebhookUrlJob::dispatch($group->api->url, $this->message);
+                        }
+                    }else{
+                        echo "sender is not equal";
                     }
                 }
+            }else{
+                echo "Auto notify is off";
             }
         }
 

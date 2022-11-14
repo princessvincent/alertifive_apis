@@ -47,7 +47,7 @@ $request->validate([
 
 if(!Auth::attempt($credentials))
 {
-    return response()->json(["status" => false , 'message' => 'Unauthorized user!'], 401);
+    return response()->json(["status" => false , 'message' => 'Invalid login credentials'], 401);
 }
 
 $user = $request->user();
